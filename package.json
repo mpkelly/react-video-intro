@@ -1,0 +1,21 @@
+{
+  "name": "react-video-intro",
+  "version": "0.0.1",
+  "description": "Video intro or help for React apps",
+  "main": "dist/index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "react",
+    "tree",
+    "drag",
+    "drop",
+    "sorted"
+  ],
+  "author": "mpkelly",
+  "license": "MIT",
+  "devDependencies": {
+    "lerna": "^3.22.0"
+  }
+}
