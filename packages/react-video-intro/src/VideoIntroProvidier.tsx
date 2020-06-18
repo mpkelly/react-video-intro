@@ -1,4 +1,3 @@
-import { HelpProps, HelpTab } from "./Help";
 import React, {
   useState,
   createContext,
@@ -6,11 +5,14 @@ import React, {
   useContext,
   FC,
   CSSProperties,
+  useCallback,
 } from "react";
+import { VideoIntroProps, VideoIntroTab } from "./VideoIntro";
+import { DriverProgram } from "./DriverProgram";
 
-export interface HelpState {
+export interface VideoIntroState {
   playbackRate: number;
-  currentTab: HelpTab;
+  currentTab: VideoIntroTab;
   tabIndex: number;
   totalTabs: number;
   hasNext: boolean;
@@ -24,18 +26,24 @@ export interface HelpState {
   style?: CSSProperties;
   videoHeight?: number | string;
   videoWidth?: number | string;
+  video?: HTMLVideoElement;
+  handleVideo(video?: HTMLVideoElement): void;
+  handleVideoTimeUpdate(): void;
+  program?: DriverProgram;
+  loopCompleted: boolean;
+  time: number;
 }
 
-const Context = createContext<HelpState | undefined>(undefined);
+const Context = createContext<VideoIntroState | undefined>(undefined);
 
-export const useHelpState = () => {
+export const useVideoIntroState = () => {
   return useContext(Context);
 };
 
-type HelpProviderProps = HelpProps & { children: ReactNode };
+type VideoIntroProvidierProps = VideoIntroProps & { children: ReactNode };
 
-export const HelpProvider: FC<HelpProviderProps> = (
-  props: HelpProviderProps
+export const VideoIntroProvidier: FC<VideoIntroProvidierProps> = (
+  props: VideoIntroProvidierProps
 ) => {
   const {
     playbackRate,
@@ -46,11 +54,24 @@ export const HelpProvider: FC<HelpProviderProps> = (
     ...rest
   } = props;
 
+  const [video, setVideo] = useState<HTMLVideoElement>();
+  const [time, setTime] = useState(0);
   const [tabIndex, setTabIndex] = useState(0);
+  const [loopCompleted, setLoopCompleted] = useState(false);
   const currentTab = tabs[tabIndex];
   const currentUrl = currentTab.url;
   const hasNext = tabIndex + 1 < tabs.length;
   const hasPrevious = tabIndex > 0;
+  const handleVideoTimeUpdate = useCallback(() => {
+    if (video) {
+      const played = video.played;
+      const hasPlayedOnce = played.end(played.length - 1) == video.duration;
+      if (!loopCompleted && hasPlayedOnce) {
+        setLoopCompleted(true);
+      }
+      setTime(video.currentTime);
+    }
+  }, [video, loopCompleted]);
 
   const handleNext = () => {
     if (hasNext) {
@@ -79,13 +100,19 @@ export const HelpProvider: FC<HelpProviderProps> = (
     handleSkip,
     currentTab,
     currentUrl,
+    video,
+    handleVideo: setVideo,
+    handleVideoTimeUpdate,
+    program: currentTab.program,
+    loopCompleted,
+    time,
     ...rest,
   };
 
   return <Context.Provider value={value}>{children}</Context.Provider>;
 };
 
-HelpProvider.defaultProps = {
+VideoIntroProvidier.defaultProps = {
   playbackRate: 1,
   height: "auto",
   width: 500,

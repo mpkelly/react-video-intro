@@ -1,8 +1,8 @@
 import { ReactNode, CSSProperties } from "react";
 import { DriverProgram } from "./DriverProgram";
-export interface HelpProps {
+export interface VideoIntroProps {
     playbackRate?: number;
-    tabs: HelpTab[];
+    tabs: VideoIntroTab[];
     onComplete(): void;
     onSkipped?(): void;
     width?: number | string;
@@ -10,10 +10,10 @@ export interface HelpProps {
     style?: CSSProperties;
     videoHeight?: number | string;
     videoWidth?: number | string;
-    program?: DriverProgram;
 }
-export interface HelpTab {
+export interface VideoIntroTab {
     url: string;
     content?: ReactNode;
+    program?: DriverProgram;
 }
-export declare const Help: (props: HelpProps) => JSX.Element;
+export declare const VideoIntro: (props: VideoIntroProps) => JSX.Element;

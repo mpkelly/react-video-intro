@@ -1,9 +1,10 @@
-import React from "react";
+import React, { useCallback, FC } from "react";
 import { render } from "react-dom";
-import { HelpProps } from "@mpkelly/react-video-intro";
-
-const App = () => {
-  return <div>todo</div>;
-};
-
-render(<App />, document.getElementById("app"));
+import {
+  VideoIntroTab,
+  VideoIntro,
+  useVideoIntroState,
+  VideoIntroState,
+  DriverProgram,
+} from "@mpkelly/react-video-intro";
+//Todo

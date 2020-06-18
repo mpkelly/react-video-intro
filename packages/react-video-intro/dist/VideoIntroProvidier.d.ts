@@ -1,9 +1,9 @@
 import { ReactNode, FC, CSSProperties } from "react";
-import { HelpProps, HelpTab } from "./Help";
+import { VideoIntroProps, VideoIntroTab } from "./VideoIntro";
 import { DriverProgram } from "./DriverProgram";
-export interface HelpState {
+export interface VideoIntroState {
     playbackRate: number;
-    currentTab: HelpTab;
+    currentTab: VideoIntroTab;
     tabIndex: number;
     totalTabs: number;
     hasNext: boolean;
@@ -24,9 +24,9 @@ export interface HelpState {
     loopCompleted: boolean;
     time: number;
 }
-export declare const useHelpState: () => HelpState;
-declare type HelpProviderProps = HelpProps & {
+export declare const useVideoIntroState: () => VideoIntroState;
+declare type VideoIntroProvidierProps = VideoIntroProps & {
     children: ReactNode;
 };
-export declare const HelpProvider: FC<HelpProviderProps>;
+export declare const VideoIntroProvidier: FC<VideoIntroProvidierProps>;
 export {};
