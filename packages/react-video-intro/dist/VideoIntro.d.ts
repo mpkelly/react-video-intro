@@ -2,6 +2,7 @@ import { ReactNode, CSSProperties } from "react";
 import { DriverProgram } from "./DriverProgram";
 export interface VideoIntroProps {
     playbackRate?: number;
+    showControls?: boolean;
     tabs: VideoIntroTab[];
     onComplete(): void;
     onSkipped?(): void;
@@ -12,7 +13,7 @@ export interface VideoIntroProps {
     videoWidth?: number | string;
 }
 export interface VideoIntroTab {
-    url: string;
+    url?: string;
     content?: ReactNode;
     program?: DriverProgram;
 }

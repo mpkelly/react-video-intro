@@ -15,6 +15,8 @@ export const VideoPlayer = () => {
     handleVideo,
     video,
     program,
+    tabIndex,
+    showControls,
     handleVideoTimeUpdate,
   } = useVideoIntroState() as VideoIntroState;
 
@@ -32,7 +34,7 @@ export const VideoPlayer = () => {
   const videoStyle = convertStateToStyles(rest);
   return (
     <div
-      key={currentTab.url}
+      key={tabIndex}
       style={{
         display: "flex",
         flexDirection: "column",
@@ -47,13 +49,14 @@ export const VideoPlayer = () => {
           height={videoHeight}
           autoPlay
           loop
+          controls={showControls}
           style={videoStyle}
           onTimeUpdate={handleVideoTimeUpdate}
           onLoadedMetadata={(event) => {
             handleRef(event.currentTarget);
           }}
         >
-          <source src={currentTab.url} />
+          {currentTab.url && <source src={currentTab.url} />}
         </video>
         <div
           style={{

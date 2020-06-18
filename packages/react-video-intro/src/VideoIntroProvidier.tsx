@@ -12,6 +12,7 @@ import { DriverProgram } from "./DriverProgram";
 
 export interface VideoIntroState {
   playbackRate: number;
+  showControls?: boolean;
   currentTab: VideoIntroTab;
   tabIndex: number;
   totalTabs: number;
@@ -20,7 +21,7 @@ export interface VideoIntroState {
   hasPrevious: boolean;
   handlePrevious(): void;
   handleSkip(): void;
-  currentUrl: string;
+  currentUrl?: string;
   width?: number | string;
   height?: number | string;
   style?: CSSProperties;
