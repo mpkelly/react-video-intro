@@ -15,26 +15,23 @@ export const VideoPlayer = () => {
     handleVideo,
     video,
     program,
-    tabIndex,
     showControls,
     handleVideoTimeUpdate,
   } = useVideoIntroState() as VideoIntroState;
 
   const state = useDriverState(program, video);
-
   const handleRef = (video: HTMLVideoElement | null) => {
     if (video) {
       video.playbackRate = playbackRate;
       handleVideo(video);
     }
   };
-
   const additionalStyle = style || {};
-  const { component, ...rest } = state;
+  const { component, ...rest } = state || {};
   const videoStyle = convertStateToStyles(rest);
+
   return (
     <div
-      key={tabIndex}
       style={{
         display: "flex",
         flexDirection: "column",
@@ -43,21 +40,37 @@ export const VideoPlayer = () => {
         ...additionalStyle,
       }}
     >
-      <div style={{ position: "relative", overflow: "hidden" }}>
-        <video
-          width={videoWidth}
-          height={videoHeight}
-          autoPlay
-          loop
-          controls={showControls}
-          style={videoStyle}
-          onTimeUpdate={handleVideoTimeUpdate}
-          onLoadedMetadata={(event) => {
-            handleRef(event.currentTarget);
-          }}
-        >
-          {currentTab.url && <source src={currentTab.url} />}
-        </video>
+      <div
+        style={{
+          position: "relative",
+          overflow: "hidden",
+          display: "flex",
+        }}
+      >
+        {currentTab.url && (
+          <video
+            width={videoWidth}
+            height={videoHeight}
+            autoPlay
+            loop
+            controls={showControls}
+            style={videoStyle}
+            ref={(video) => {
+              if (!video) {
+                handleRef(null);
+              }
+            }}
+            onTimeUpdate={handleVideoTimeUpdate}
+            onLoadedMetadata={(event) => {
+              handleRef(event.currentTarget);
+            }}
+          >
+            <source src={currentTab.url} />
+          </video>
+        )}
+        {!currentTab.url && (
+          <div style={{ height: videoHeight, width: videoWidth }}></div>
+        )}
         <div
           style={{
             width: "100%",

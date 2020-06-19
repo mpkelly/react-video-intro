@@ -74,15 +74,22 @@ export const VideoIntroProvidier: FC<VideoIntroProvidierProps> = (
     }
   }, [video, loopCompleted]);
 
+  const changeTab = (delta: number) => {
+    setTime(0);
+    setTabIndex((current) => current + delta);
+  };
+
   const handleNext = () => {
     if (hasNext) {
-      setTabIndex((index) => index + 1);
+      changeTab(1);
+    } else {
+      onComplete();
     }
   };
 
   const handlePrevious = () => {
     if (hasPrevious) {
-      setTabIndex((index) => index - 1);
+      changeTab(-1);
     }
   };
 

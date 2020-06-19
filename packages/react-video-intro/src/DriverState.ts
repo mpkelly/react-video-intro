@@ -11,50 +11,54 @@ export const useDriverState = (
   program?: DriverProgram,
   video?: HTMLVideoElement
 ) => {
-  const [state, setState] = useState<DriverProgramState>(createState(program));
+  const [state, setState] = useState<DriverProgramState>();
   const requestRef = useRef<number>();
-  const { loopCompleted } = useVideoIntroState() as VideoIntroState;
+  const { loopCompleted, time } = useVideoIntroState() as VideoIntroState;
 
-  const animate = (lastStep?: DriverProgramStep, loopCompleted?: boolean) => {
-    if (!video || !program) {
+  const animate = (
+    time: number,
+    lastStep?: DriverProgramStep,
+    loopCompleted?: boolean
+  ) => {
+    if (!program) {
       return;
     }
-    const currentTime = video.currentTime as number;
-    const step = getStep(program, currentTime, !!loopCompleted);
 
+    const step = getStep(program, time, !!loopCompleted);
     if (!step) {
       return;
     }
 
-    video.playbackRate =
-      step.playbackRate !== undefined ? step.playbackRate : 1;
+    if (video && step.playbackRate !== undefined) {
+      video.playbackRate = step.playbackRate;
+    }
 
     if (step !== lastStep) {
       setState(createStepState(step));
     }
 
     requestRef.current = requestAnimationFrame(() =>
-      animate(step, loopCompleted)
+      animate(time, step, loopCompleted)
     );
   };
 
   useEffect(() => {
-    if (program && video) {
+    if (program) {
       requestRef.current = requestAnimationFrame(() =>
-        animate(undefined, loopCompleted)
+        animate(time, undefined, loopCompleted)
       );
+    } else {
+      setState(createState(program));
     }
     return () => cancelAnimationFrame(requestRef.current as number);
-  }, [program, video, loopCompleted]);
+  }, [program, video, time, loopCompleted]);
 
   return state;
 };
 
 const createState = (program?: DriverProgram) => {
   if (!program || !program.steps.length) {
-    return {
-      scale: 1,
-    };
+    return {};
   }
   const step = program.steps[0];
   return createStepState(step);
